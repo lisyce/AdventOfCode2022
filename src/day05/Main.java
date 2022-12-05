@@ -9,9 +9,12 @@ public class Main {
         File input = new File("src/day05/input.txt");
         Scanner s = new Scanner(input);
 
-        List<Stack<Character>> stacks = new ArrayList<>();
+        List<Stack<Character>> ptOneStacks = new ArrayList<>();
+        List<Stack<Character>> ptTwoStacks = new ArrayList<>();
+
         for (int i = 0; i < 9; i++) {
-            stacks.add(new Stack<>());
+            ptOneStacks.add(new Stack<>());
+            ptTwoStacks.add(new Stack<>());
         }
 
         // parse into Stacks
@@ -23,7 +26,7 @@ public class Main {
                 String crate = line.substring(i, i+3);
                 if (!crate.isBlank()) {
                     char letter = crate.charAt(1);
-                    stacks.get(stackNum).add(letter);
+                    ptOneStacks.get(stackNum).add(letter);
                 }
                 i += 3;
                 stackNum++;
@@ -33,10 +36,17 @@ public class Main {
         }
 
         // reverse stacks to match problem
-        for (Stack<Character> stack : stacks) {
+        for (int i = 0; i < ptOneStacks.size(); i++) {
+            Stack<Character> ptOneStack = ptOneStacks.get(i);
+            Stack<Character> ptTwoStack = ptTwoStacks.get(i);
+
             Queue<Character> temp = new LinkedList<>();
-            while (!stack.isEmpty()) temp.add(stack.pop());
-            while (!temp.isEmpty()) stack.push(temp.remove());
+            while (!ptOneStack.isEmpty()) temp.add(ptOneStack.pop());
+            while (!temp.isEmpty()) {
+                char removed = temp.remove();
+                ptOneStack.push(removed);
+                ptTwoStack.push(removed);
+            }
         }
 
         // skip blank line
@@ -44,28 +54,37 @@ public class Main {
 
         // move crates
         while (s.hasNextLine()) {
-//            System.out.println();
-//            stacks.forEach(System.out::println);
-
             String[] instructions = s.nextLine().split(" ");
             int amount = Integer.parseInt(instructions[1]);
             int fromStack = Integer.parseInt(instructions[3]) - 1;
             int toStack = Integer.parseInt(instructions[5]) - 1;
 
+            Stack<Character> temp = new Stack<>();
 
             for (int i = 0; i < amount; i++) {
-                char crate = stacks.get(fromStack).pop();
-                stacks.get(toStack).push(crate);
+                char ptOneCrate = ptOneStacks.get(fromStack).pop();
+                char ptTwoCrate = ptTwoStacks.get(fromStack).pop();
+                temp.push(ptTwoCrate);
+                ptOneStacks.get(toStack).push(ptOneCrate);
             }
+
+            while (!temp.isEmpty()) {
+                ptTwoStacks.get(toStack).push(temp.pop());
+            }
+
+//            System.out.println();
+//            ptTwoStacks.forEach(System.out::println);
         }
 
         // print message
-        for (Stack<Character> stack : stacks) {
-            System.out.print("Part 1: ");
+        System.out.print("Part 1: ");
+        for (Stack<Character> stack : ptOneStacks) {
             if (!stack.isEmpty()) System.out.print(stack.pop());
         }
 
-
-
+        System.out.print("\nPart 2: ");
+        for (Stack<Character> stack : ptTwoStacks) {
+            if (!stack.isEmpty()) System.out.print(stack.pop());
+        }
     }
 }
