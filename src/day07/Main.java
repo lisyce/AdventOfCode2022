@@ -9,7 +9,7 @@ public class Main {
        File input = new File("src/day07/test.txt");
        Scanner s = new Scanner(input);
 
-       FileNode root = new FileNode("/");
+       FileNode root = new FileNode("/", null);
        FileNode pointer = root;
 
        // build the graph
@@ -30,8 +30,7 @@ public class Main {
                    pointer = toDirSubNode;
                } else {
                    // create the node
-                   FileNode subNode = new FileNode(toDir);
-                   subNode.parent = pointer;
+                   FileNode subNode = new FileNode(toDir, pointer);
                    pointer.subNodes.add(subNode);
                    pointer = subNode;
                }
@@ -43,16 +42,14 @@ public class Main {
                FileNode subNode;
                if (halves[0].equals("dir")) {
                    // subfolder
-                   subNode = new FileNode(halves[1]);
+                   subNode = new FileNode(halves[1], pointer);
                } else {
+                   // file
                    int size = Integer.parseInt(halves[0]);
-                   subNode = new FileNode(halves[1], size);
+                   subNode = new FileNode(halves[1], size, pointer);
                }
-
-               subNode.parent = pointer;
                pointer.subNodes.add(subNode);
            }
-
        }
 
    } 
