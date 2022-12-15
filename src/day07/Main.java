@@ -6,10 +6,10 @@ import java.util.*;
  
 public class Main { 
    public static void main(String[] args) throws FileNotFoundException {
-       File input = new File("src/day07/test.txt");
+       File input = new File("src/day07/input.txt");
        Scanner s = new Scanner(input);
 
-       FileNode root = new FileNode("/", null);
+       FileNode root = new FileNode("/", null, true);
        FileNode pointer = root;
 
        // build the graph
@@ -30,7 +30,7 @@ public class Main {
                    pointer = toDirSubNode;
                } else {
                    // create the node
-                   FileNode subNode = new FileNode(toDir, pointer);
+                   FileNode subNode = new FileNode(toDir, pointer, true);
                    pointer.subNodes.add(subNode);
                    pointer = subNode;
                }
@@ -42,15 +42,34 @@ public class Main {
                FileNode subNode;
                if (halves[0].equals("dir")) {
                    // subfolder
-                   subNode = new FileNode(halves[1], pointer);
+                   subNode = new FileNode(halves[1], pointer, true);
                } else {
                    // file
                    int size = Integer.parseInt(halves[0]);
-                   subNode = new FileNode(halves[1], size, pointer);
+                   subNode = new FileNode(halves[1], size, pointer, false);
                }
                pointer.subNodes.add(subNode);
            }
        }
 
-   } 
+       // search for directories with size <= 100000
+       Set<FileNode> ptOneNodes = searchPtOne(root);
+       System.out.println(ptOneNodes);
+       int ptOneTotal = ptOneNodes.stream().mapToInt(x -> x.size).sum();
+       System.out.println("Part 1: " + ptOneTotal);
+   }
+
+   public static Set<FileNode> searchPtOne(FileNode root) {
+       Set<FileNode> smallNodes = new TreeSet<>();
+
+       if (root.size <= 100000 && root.isDirectory) {
+           smallNodes.add(root);
+       }
+
+       for (FileNode child : root.subNodes) {
+           smallNodes.addAll(searchPtOne(child));
+       }
+
+       return smallNodes;
+   }
 } 
