@@ -15,11 +15,11 @@ echo import java.io.FileNotFoundException; >> Main.java
 echo import java.util.*; >> Main.java
 echo: >> Main.java
 echo public class Main { >> Main.java
-echo    public static void main(String[] args) throws FileNotFoundException { >> Main.java
-echo        File input = new File("src/%x%/test.txt"); >> Main.java
-echo        Scanner s = new Scanner(input); >> Main.java
+echo     public static void main(String[] args) throws FileNotFoundException { >> Main.java
+echo         File input = new File("src/%x%/test.txt"); >> Main.java
+echo         Scanner s = new Scanner(input); >> Main.java
 echo: >> Main.java
-echo    } >> Main.java
+echo     } >> Main.java
 echo } >> Main.java
 
 cd ../..
