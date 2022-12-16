@@ -5,14 +5,20 @@ import java.util.Objects;
 public class Point {
     public int x;
     public int y;
+    public Point following;
 
-    public Point(int x, int y) {
+    public Point(Point following) {
+        this(0, 0, following);
+    }
+
+    public Point(int x, int y, Point following) {
         this.x = x;
         this.y = y;
+        this.following = following;
     }
 
     public Point copy() {
-        return new Point(x, y);
+        return new Point(x, y, null);
     }
 
     public boolean touching(Point other) {

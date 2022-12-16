@@ -6,7 +6,7 @@ import java.util.*;
  
 public class Main { 
    public static void main(String[] args) throws FileNotFoundException { 
-       File input = new File("src/day13/test.txt"); 
+       File input = new File("src/day13/test2.txt");
        Scanner s = new Scanner(input);
 
        while(s.hasNextLine()) {
