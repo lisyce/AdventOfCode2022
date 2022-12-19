@@ -6,7 +6,7 @@ import java.util.*;
  
 public class Main { 
     public static void main(String[] args) throws FileNotFoundException { 
-        File input = new File("src/day14/test.txt"); 
+        File input = new File("src/day14/input.txt");
         Scanner s = new Scanner(input);
 
         // build the grid
@@ -41,18 +41,15 @@ public class Main {
                     } else { // y
                         int dir = (int) Math.signum(relativeCoords[1] - prevRelCoords[1]);
                         for (int y = prevRelCoords[1]; y != relativeCoords[1]; y += dir) {
-                            grid.get(y+1).set(relativeCoords[0], '#');
+                            grid.get(y+dir).set(relativeCoords[0], '#');
                         }
                     }
 
                 }
-                System.out.println(step);
-                grid.forEach(System.out::println);
-                System.out.println();
-
             }
         }
 
+//        grid.forEach(System.out::println);
 
     }
 
