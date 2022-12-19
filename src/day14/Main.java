@@ -5,11 +5,19 @@ import java.io.FileNotFoundException;
 import java.util.*; 
  
 public class Main { 
-    public static void main(String[] args) throws FileNotFoundException { 
-        File input = new File("src/day14/input.txt");
+    public static void main(String[] args) throws FileNotFoundException {
+        // build the grid
+        List<List<Character>> grid = buildGrid("src/day14/test.txt");
+//        grid.forEach(System.out::println);
+
+        // simulate the falling sand
+
+    }
+
+    public static List<List<Character>> buildGrid(String fileName) throws FileNotFoundException {
+        File input = new File(fileName);
         Scanner s = new Scanner(input);
 
-        // build the grid
         // sand flows from (500, 0)
         List<List<Character>> grid = new ArrayList<>();
         grid.add(new ArrayList<>(List.of('+'))); // (500, 0)
@@ -49,8 +57,7 @@ public class Main {
             }
         }
 
-//        grid.forEach(System.out::println);
-
+        return grid;
     }
 
     // example input: 503,4
