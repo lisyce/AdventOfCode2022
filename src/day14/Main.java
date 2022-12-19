@@ -7,11 +7,49 @@ import java.util.*;
 public class Main { 
     public static void main(String[] args) throws FileNotFoundException {
         // build the grid
-        List<List<Character>> grid = buildGrid("src/day14/test.txt");
-//        grid.forEach(System.out::println);
+        List<List<Character>> grid = buildGrid("src/day14/input.txt");
 
         // simulate the falling sand
+        // if the sand reaches the bottom of the grid, the unit before this one was the last unit of sand
+        int maxUnits = 0;
+        while (true) {
+            if (!simulateSand(grid)) maxUnits++;
+            else break;
+        }
 
+        System.out.println("Part 1: " + maxUnits);
+
+
+    }
+
+    // simulates the full path of one unit of sand
+    // returns whether the sand fell off the map
+    public static boolean simulateSand(List<List<Character>> grid) {
+        int[] sandCoords = getCoords(grid, "500,0", true);
+
+        boolean offMap = false;
+
+        while(true) {
+            // is the sand in the last row of the grid?
+            if (sandCoords[1] == grid.size() - 1) {
+                offMap = true;
+                break;
+            }
+
+            // can the sand fall down one step?
+            if (grid.get(sandCoords[1] + 1).get(sandCoords[0]) == '.') {
+                // fall down one step
+                sandCoords[1]++;
+            } else if (grid.get(sandCoords[1] + 1).get(sandCoords[0] - 1) == '.') { // can the sand go diagonally to the left?
+                sandCoords[0]--;
+                sandCoords[1]++;
+            } else if (grid.get(sandCoords[1] + 1).get(sandCoords[0] + 1) == '.') { // can it go diagonally to the right?
+                sandCoords[0]++;
+                sandCoords[1]++;
+            } else break;
+        }
+        grid.get(sandCoords[1]).set(sandCoords[0], 'o');
+        return offMap;
     }
 
     public static List<List<Character>> buildGrid(String fileName) throws FileNotFoundException {
@@ -57,6 +95,11 @@ public class Main {
             }
         }
 
+        // give the right, left, and bottom one unit of padding
+        int startX = grid.get(0).indexOf('+');
+        extendGrid(grid, 500 - startX - 1, grid.size());
+        extendGrid(grid, 500 + grid.get(0).size() - startX - 1, 0);
+
         return grid;
     }
 
@@ -65,8 +108,8 @@ public class Main {
         int[] coords = Arrays.stream(input.split(",")).mapToInt(Integer::parseInt).toArray();
         if (!relative) return coords;
 
-        int newX = coords[0] < 500 ? grid.get(0).indexOf('+') - (500 - coords[0]) : grid.get(0).indexOf('+') + (coords[0] - 500);
-        return new int[]{newX, coords[1]};
+        int relX = coords[0] < 500 ? grid.get(0).indexOf('+') - (500 - coords[0]) : grid.get(0).indexOf('+') + (coords[0] - 500);
+        return new int[]{relX, coords[1]};
     }
 
     public static void extendGrid (List<List<Character>> grid, int x, int y) {
