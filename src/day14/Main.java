@@ -7,18 +7,34 @@ import java.util.*;
 public class Main { 
     public static void main(String[] args) throws FileNotFoundException {
         // build the grid
-        List<List<Character>> grid = buildGrid("src/day14/input.txt");
+        List<List<Character>> pt1Grid = buildGrid("src/day14/input.txt");
 
         // simulate the falling sand
         // if the sand reaches the bottom of the grid, the unit before this one was the last unit of sand
-        int maxUnits = 0;
+        int pt1Units = 0;
         while (true) {
-            if (!simulateSand(grid)) maxUnits++;
+            if (!simulateSand(pt1Grid)) pt1Units++;
             else break;
         }
 
-        System.out.println("Part 1: " + maxUnits);
+        System.out.println("Part 1: " + pt1Units);
 
+        // part 2
+        // give the grid a floor
+        List<List<Character>> pt2Grid = buildGrid("src/day14/input.txt");
+        pt2Grid.add(new ArrayList<>());
+        for (int i = 0; i < pt2Grid.get(0).size(); i++) pt2Grid.get(pt2Grid.size() - 1).add('#');
+
+        // simulate the sand
+        int startX = pt2Grid.get(0).indexOf('+');
+        int pt2Units = 0;
+        while (startX != -1) {
+            simulateSand(pt2Grid);
+            pt2Units++;
+            startX = pt2Grid.get(0).indexOf('+');
+
+        }
+        System.out.println("Part 2: " + pt2Units);
 
     }
 
@@ -37,6 +53,15 @@ public class Main {
             }
 
             // can the sand fall down one step?
+            // extend the grid if we are at x = 0 or x = size - 1
+            int startX = grid.get(0).indexOf('+');
+            if (sandCoords[0] == 0) {
+                extendGrid(grid, 500 - startX - 1, sandCoords[1]);
+                sandCoords[0]++;
+            } else if (sandCoords[0] == grid.get(0).size() - 1) {
+                extendGrid(grid, 500 + grid.get(0).size() - startX, sandCoords[1]);
+            }
+
             if (grid.get(sandCoords[1] + 1).get(sandCoords[0]) == '.') {
                 // fall down one step
                 sandCoords[1]++;
@@ -47,6 +72,7 @@ public class Main {
                 sandCoords[0]++;
                 sandCoords[1]++;
             } else break;
+
         }
         grid.get(sandCoords[1]).set(sandCoords[0], 'o');
         return offMap;
@@ -137,6 +163,14 @@ public class Main {
                 }
 
             }
+        }
+
+        // extend the floor if necessary
+        int startX = grid.get(0).indexOf('+');
+        List<Character> floor = grid.get(grid.size() - 1);
+        if (floor.get(startX) == '#') {
+            // there is a floor
+            Collections.fill(floor, '#');
         }
 
     }
