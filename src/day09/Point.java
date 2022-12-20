@@ -17,6 +17,7 @@ public class Point {
         this.following = following;
     }
 
+
     public Point copy() {
         return new Point(x, y, null);
     }
