@@ -7,8 +7,50 @@ import java.util.*;
 public class Main { 
     public static void main(String[] args) throws FileNotFoundException { 
 
+        // part 1
         MonkeyNode root = buildMonkeyTree("src/day21/input.txt");
         System.out.println("Part 1: " + root.updateValue());
+
+        //part 2
+        root = buildMonkeyTree("src/day21/input.txt");
+        System.out.println("Part 2: " + findHumnVal(root));
+    }
+
+    public static long findHumnVal(MonkeyNode root) {
+
+        // find top-level equality target
+        long target;
+        MonkeyNode pointer;
+
+        if (root.left.hasChild("humn")) {
+            target = root.right.updateValue();
+            pointer = root.left;
+        } else {
+            target = root.left.updateValue();
+            pointer = root.right;
+        }
+
+        while (true) {
+            if (pointer.id.equals("humn")) { // this is the humn node
+                return target;
+            }
+
+            // find value of the branch that doesn't contain humn
+            MonkeyNode hasHumn;
+            if (pointer.left.hasChild("humn")) {
+                pointer.right.updateValue();
+                hasHumn = pointer.left;
+            } else {
+                pointer.left.updateValue();
+                hasHumn = pointer.right;
+            }
+
+            // get missing value
+            target = pointer.calcMissingValue(target);
+
+            // move down the tree closer to the humn node
+            pointer = hasHumn;
+        }
     }
 
     public static MonkeyNode buildMonkeyTree(String fileName) throws FileNotFoundException {
