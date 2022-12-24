@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException; 
 import java.util.*;
 
-
 public class Main { 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -39,9 +38,6 @@ public class Main {
 
                         // move in the x direction
                         x = nextSpace;
-
-//                        System.out.println(x + ", " + y);
-
                     }
                 } else { // moving U or D
 
@@ -52,9 +48,6 @@ public class Main {
 
                         // move in the y direction
                         y = nextSpace;
-
-//                        System.out.println(x + ", " + y);
-
                     }
                 }
 
@@ -113,7 +106,7 @@ public class Main {
             }
         }
         // move in the opposite direction until we find the row to look for
-        int originalY = currY;
+        int originalY = currY; // allows the loop to start
 
         while (true) {
             if ((currY == 1 || currY == grid.size()) && originalY != currY) break;
@@ -123,7 +116,6 @@ public class Main {
             currY -= yDir;
         }
         return grid.get(currY - 1).spaceIsValid(currX) ? currY : -1;
-
     }
     public static List<Row> buildGrid(Scanner s) {
 
