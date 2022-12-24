@@ -102,36 +102,29 @@ public class Main {
     // returns -1 if the next space is blocked
     public static int nextYSpace(List<Row> grid, int currY, int currX, int yDir) {
 
-//        // are we on the bottom edge of the grid and moving down?
-//        if (currY == grid.size() && yDir == 1) {
-//            Row topRow = grid.get(0);
-//            return topRow.spaceIsValid(currX) ? 1 : -1;
-//
-//        } else if (currY == 1 && yDir == -1) { // are we on the top edge of the grid and moving up?
-//            Row bottomRow = grid.get(grid.size() - 1);
-//            return bottomRow.spaceIsValid(currX) ? grid.size() - 1 : -1;
-
-//        }
-//        else  { // can we just move to the next spot?
+        // can we just move to the next spot?
+        if (!(currY == 1 && yDir == -1) && !(currY == grid.size() && yDir == 1)) {
             Row nextRow = grid.get(currY - 1 + yDir);
             if (nextRow.spaceIsValid(currX)) {
                 return currY + yDir;
 
-            } else if (grid.get(currY - 1 + yDir).wallX.contains(currX)) { // are we just blocked by a wall? if so, stop
+            } else if (nextRow.wallX.contains(currX)) { // are we just blocked by a wall? if so, stop
                 return -1;
-            } else { // move in the opposite direction until we find the row to look for
-                while (true) {
-                    if (currY - 1 == 1 || currY == grid.size()) break;
-
-                    Row prevRow = grid.get(currY - yDir - 1);
-                    if (prevRow.startX > currX || prevRow.endX < currX) break;
-                    currY -= yDir;
-                }
-                return grid.get(currY - 1).spaceIsValid(currX) ? currY : -1;
             }
         }
-//    }
+        // move in the opposite direction until we find the row to look for
+        int originalY = currY;
 
+        while (true) {
+            if ((currY == 1 || currY == grid.size()) && originalY != currY) break;
+
+            Row nextRow = grid.get(currY - yDir - 1);
+            if ((nextRow.startX > currX || nextRow.endX < currX) && originalY != currY) break;
+            currY -= yDir;
+        }
+        return grid.get(currY - 1).spaceIsValid(currX) ? currY : -1;
+
+    }
     public static List<Row> buildGrid(Scanner s) {
 
         // build grid
